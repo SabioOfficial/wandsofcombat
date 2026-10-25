@@ -146,7 +146,7 @@ public class MagmaWandItem extends Item {
                 .append(Component.literal(" "))
                 .append(TooltipIcons.icon(TooltipIcons.RIGHT_CLICK_ICON))
                 .append(Component.literal(" "))
-                .append(TooltipIcons.title("Fireball Ring", ChatFormatting.YELLOW))
+                .append(TooltipIcons.title("Fireball Ring", ChatFormatting.DARK_PURPLE))
                 .append(Component.literal(" "))
                 .append(TooltipIcons.icon(TooltipIcons.MANA_ICON))
                 .append(Component.literal(String.valueOf(ManaCosts.MAGMA_ULTIMATE)).withStyle(ChatFormatting.AQUA)));
