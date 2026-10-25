@@ -2,10 +2,14 @@
   "schemaVersion": 1,
   "id": "wandsofcombat",
   "version": "${version}",
-  "name": "wandsofcombat",
-  "description": "A combat-specialized magic expansion featuring uniquely crafted wands with special abilities, ultimates, and passives.",
+  "name": "Wands of Combat",
+  "description": "A sick wand mod with a mana system!",
   "authors": ["Sabio"],
-  "contact": {},
+  "contact": {
+    "homepage": "https://modrinth.com/mod/wandsofcombat",
+    "sources": "https://github.com/SabioOfficial/wandsofcombat",
+    "issues": "https://github.com/SabioOfficial/wandsofcombat/issues"
+  },
   "license": "GPL-3.0",
   "icon": "assets/wandsofcombat/icon.png",
   "environment": "*",
@@ -25,6 +29,13 @@
   "mixins": [
     "wandsofcombat.mixins.json"
   ],
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/6cvn6e6rgH"
+      }
+    }
+  },
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
