@@ -36,6 +36,10 @@ dependencies {
     implementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 }
 
+if (stonecutter.eval(stonecutter.current.version, ">=26.3")) {
+    sourceSets.main.resources.srcDir 'src/brewing-26.3/resources'
+}
+
 processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", project.minecraft_version

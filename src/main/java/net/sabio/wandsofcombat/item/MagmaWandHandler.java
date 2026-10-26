@@ -21,6 +21,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
+import net.sabio.wandsofcombat.util.VelocitySync;
 
 import java.util.*;
 
@@ -71,7 +72,7 @@ public class MagmaWandHandler {
             );
             Vec3 currentMotion = entity.getDeltaMovement();
             entity.setDeltaMovement(currentMotion.x, 0.3, currentMotion.z);
-            entity.hurtMarked = true;
+            VelocitySync.mark(entity);
             if (entity instanceof ServerPlayer serverTarget) {
                 serverTarget.connection.send(new ClientboundSetEntityMotionPacket(serverTarget));
             }
@@ -282,7 +283,7 @@ public class MagmaWandHandler {
                 target.knockback(1.2, -knockback.x, -knockback.z, world.damageSources().magic(), 0);
                 Vec3 currentMotion = target.getDeltaMovement();
                 target.setDeltaMovement(currentMotion.x, 0.35, currentMotion.z);
-                target.hurtMarked = true;
+                VelocitySync.mark(target);
                 if (target instanceof ServerPlayer serverTarget) {
                     serverTarget.connection.send(new ClientboundSetEntityMotionPacket(serverTarget));
                 }

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.sabio.wandsofcombat.util.VelocitySync;
 
 import java.util.*;
 
@@ -106,7 +107,7 @@ public class MagnetPullManager {
             float multiplier = getSpeedMultiplier(player, entity);
             Vec3 toward = new Vec3(playerPos.x - entity.getX(), 0, playerPos.z - entity.getZ()).normalize();
             entity.setDeltaMovement(toward.scale(1.5 * multiplier).add(0, 0.2, 0));
-            entity.hurtMarked = true;
+            VelocitySync.mark(entity);
             if (entity instanceof ServerPlayer serverPlayer) {
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
             }
@@ -145,7 +146,7 @@ public class MagnetPullManager {
             away = away.normalize();
             entity.hurtServer(world, world.damageSources().indirectMagic(player, player), damage);
             entity.setDeltaMovement(away.x * 2.0 * multiplier, 0.4, away.z * 2.0 * multiplier);
-            entity.hurtMarked = true;
+            VelocitySync.mark(entity);
             if (entity instanceof ServerPlayer serverPlayer) {
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
             }
@@ -186,7 +187,7 @@ public class MagnetPullManager {
                     if (dist < 0.5) return;
                     double speed = Math.min(PASSIVE_SPEED, 0.15 + dist * 0.05);
                     item.setDeltaMovement(toward.normalize().scale(speed));
-                    item.hurtMarked = true;
+                    VelocitySync.mark(item);
                     if (currentTick % 3 == 0) {
                         world.sendParticles(
                                 ParticleTypes.ENCHANT,
@@ -207,7 +208,7 @@ public class MagnetPullManager {
                     if (dist < 0.5) return;
                     double speed = Math.min(PASSIVE_SPEED, 0.15 + dist * 0.05);
                     orb.setDeltaMovement(toward.normalize().scale(speed));
-                    orb.hurtMarked = true;
+                    VelocitySync.mark(orb);
                     if (currentTick % 3 == 0) {
                         world.sendParticles(
                                 ParticleTypes.HAPPY_VILLAGER,

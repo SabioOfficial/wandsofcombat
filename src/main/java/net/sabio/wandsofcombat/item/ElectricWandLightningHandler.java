@@ -13,6 +13,7 @@ import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.sabio.wandsofcombat.util.VelocitySync;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -114,7 +115,7 @@ public class ElectricWandLightningHandler {
                         false
                 ));
                 target.setDeltaMovement(0, target.getDeltaMovement().y, 0);
-                target.hurtMarked = true;
+                VelocitySync.mark(target);
                 if (target instanceof Mob mob) {
                     mob.setAggressive(false);
                     mob.setTarget(null);

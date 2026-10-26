@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.sabio.wandsofcombat.Wandsofcombat;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,7 +34,11 @@ public abstract class FrozenIceRenderMixin<T extends net.minecraft.world.entity.
         float height = state.boundingBoxHeight * SIZE_MARGIN + PADDING * 2f;
 
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0f - state.bodyRot));
+        //? if >=26.3 {
+        poseStack.mulPose(new Matrix4f().rotation(Axis.YP.rotationDegrees(180.0f - state.bodyRot)));
+        //?} else {
+        /*poseStack.mulPose(Axis.YP.rotationDegrees(180.0f - state.bodyRot));
+        *///?}
         poseStack.scale(width, height, width);
         poseStack.translate(-0.5, 0.0, -0.5);
 

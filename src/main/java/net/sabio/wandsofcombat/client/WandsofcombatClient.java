@@ -8,7 +8,9 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import net.sabio.wandsofcombat.Wandsofcombat;
 import net.sabio.wandsofcombat.item.MagnetTogglePacket;
-import org.lwjgl.glfw.GLFW;
+//? if <26.3 {
+/*import org.lwjgl.glfw.GLFW;
+*///?}
 
 public class WandsofcombatClient implements ClientModInitializer {
     private static KeyMapping toggleRepelKey;
@@ -25,8 +27,13 @@ public class WandsofcombatClient implements ClientModInitializer {
         }
         toggleRepelKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.wandsofcombat.toggle_repel",
-                InputConstants.Type.KEYSYM,
+                //? if>=26.3 {
+                InputConstants.Type.KEYBOARD,
+                InputConstants.KEY_R,
+                //?} else {
+                /*InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_R,
+                *///?}
                 wandsCategory
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.sabio.wandsofcombat.util.VelocitySync;
 
 import java.util.*;
 
@@ -161,7 +162,7 @@ public class IceWandComboHandler {
                 long elapsed = currentTick - startTick;
                 double progress = (double) elapsed / WIND_UP_DURATION;
                 player.setDeltaMovement(0, 0, 0);
-                player.hurtMarked = true;
+                VelocitySync.mark(player);
                 if (player instanceof ServerPlayer serverPlayer) {
                     serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
                 }
@@ -210,7 +211,7 @@ public class IceWandComboHandler {
                             if (away.horizontalDistance() < 0.01) away = new Vec3(1, 0, 0);
                             away = away.normalize();
                             entity.setDeltaMovement(away.x * 1.1, 0.1, away.z * 1.1);
-                            entity.hurtMarked = true;
+                            VelocitySync.mark(entity);
                             if (entity instanceof ServerPlayer sp) {
                                 sp.connection.send(new ClientboundSetEntityMotionPacket(sp));
                             }

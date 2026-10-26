@@ -27,6 +27,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
+import net.sabio.wandsofcombat.util.VelocitySync;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -60,7 +61,7 @@ public class IceWandItem extends Item {
                     true
             ));
             mob.setDeltaMovement(Vec3.ZERO);
-            mob.hurtMarked = true;
+            VelocitySync.mark(mob);
             mob.setLastHurtByPlayer(player, mob.tickCount);
             if (mob instanceof Mob livingMob) {
                 livingMob.setTarget(player);
