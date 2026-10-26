@@ -19,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.sabio.wandsofcombat.effect.ModEffects;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
 import net.sabio.wandsofcombat.util.VelocitySync;
@@ -28,7 +29,6 @@ import java.util.*;
 public class MagmaWandHandler {
     private static final Map<UUID, Long> lastDamageTick = new HashMap<>();
     private static final Map<UUID, Float> passiveAbsorptionGiven = new HashMap<>();
-    private static final Map<UUID, Long> abilityEndTimes = new HashMap<>();
     private static final Map<UUID, Long> ultimateEndTimes = new HashMap<>();
     private static final Set<UUID> wandFireballEntities = new HashSet<>();
     private static final Map<UUID, Long> fireballExpiryTimes = new HashMap<>();
@@ -338,7 +338,6 @@ public class MagmaWandHandler {
             UUID uuid = handler.player.getUUID();
             lastDamageTick.remove(uuid);
             passiveAbsorptionGiven.remove(uuid);
-            abilityEndTimes.remove(uuid);
             ultimateEndTimes.remove(uuid);
             discardRing(uuid);
             MagmaWandItem.hitCounters.remove(uuid);
@@ -360,18 +359,17 @@ public class MagmaWandHandler {
     }
     public static void tryActivateAbility(Player player) {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
-        if (abilityEndTimes.containsKey(player.getUUID()) || ultimateEndTimes.containsKey(player.getUUID())) return;
+        if (player.hasEffect(ModEffects.ABLAZED_HEALING)) return;
         if (!ManaManager.tryConsume(player, ManaCosts.MAGMA_ABILITY)) return;
-        UUID uuid = player.getUUID();
         ServerLevel world = serverPlayer.level();
-        abilityEndTimes.put(uuid, world.getGameTime() + MagmaWandItem.ABILITY_DURATION);
         world.playSeededSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.0f, 0.7f, world.getRandom().nextLong());
+        player.addEffect(new MobEffectInstance(ModEffects.ABLAZED_HEALING, MagmaWandItem.ABILITY_DURATION, 0, false, true, true));
         player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, MagmaWandItem.ABILITY_DURATION, 0, false, true, true));
     }
     public static void tryActivateUltimate(Player player) {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         UUID uuid = player.getUUID();
-        if (ultimateEndTimes.containsKey(uuid) || abilityEndTimes.containsKey(uuid)) return;
+        if (ultimateEndTimes.containsKey(uuid)) return;
         if (!ManaManager.tryConsume(player, ManaCosts.MAGMA_ULTIMATE)) return;
         ServerLevel world = serverPlayer.level();
         ultimateEndTimes.put(uuid, world.getGameTime() + MagmaWandItem.ULTIMATE_DURATION);
@@ -406,40 +404,6 @@ public class MagmaWandHandler {
                                 triggerPassiveKnockback(player);
                                 applyPassiveBuffs(player);
                             }
-                        }
-                    }
-                }
-                Long abilityEnd = abilityEndTimes.get(uuid);
-                if (abilityEnd != null && currentTick >= abilityEnd) {
-                    abilityEndTimes.remove(uuid);
-                    player.removeEffect(MobEffects.FIRE_RESISTANCE);
-                } else if (abilityEnd != null) {
-                    if (player.isOnFire() && player.getRemainingFireTicks() > 0) {
-                        player.heal(0.1f);
-                        player.setRemainingFireTicks(0);
-                        if (currentTick % 5 == 0) {
-                            world.sendParticles(
-                                    new DustParticleOptions(0xED541C, 1.5f),
-                                    player.getX(),
-                                    player.getY() + 1.0,
-                                    player.getZ(),
-                                    6,
-                                    0.3,
-                                    0.4,
-                                    0.3,
-                                    0
-                            );
-                            world.sendParticles(
-                                    ParticleTypes.FLAME,
-                                    player.getX(),
-                                    player.getY() + 0.5,
-                                    player.getZ(),
-                                    4,
-                                    0.2,
-                                    0.3,
-                                    0.2,
-                                    0.02
-                            );
                         }
                     }
                 }

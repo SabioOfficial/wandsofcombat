@@ -15,6 +15,7 @@
   "item.minecraft.tipped_arrow.effect.mana_regeneration_plus": "Arrow of Mana Regeneration",
   "itemGroup.wandsofcombat": "Wands of Combat",
   "effect.wandsofcombat.mana_regeneration": "Mana Regeneration",
+  "effect.wandsofcombat.ablazed_healing": "Ablazed Healing",
   "advancement.wandsofcombat.magnetic_superpower.title": "Magnetic Superpower",
   "advancement.wandsofcombat.magnetic_superpower.description": "Could be crafted into something magnetic...",
   "advancement.wandsofcombat.frozen_in_time.title": "Cold Burning!",

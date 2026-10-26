@@ -14,6 +14,12 @@ public class ModEffects {
             new ManaRegenerationEffect()
     );
 
+    public static final Holder<MobEffect> ABLAZED_HEALING = Registry.registerForHolder(
+            BuiltInRegistries.MOB_EFFECT,
+            Identifier.fromNamespaceAndPath(Wandsofcombat.MOD_ID, "ablazed_healing"),
+            new AblazedHealingEffect()
+    );
+
     public static void initialize() {
 
     }
