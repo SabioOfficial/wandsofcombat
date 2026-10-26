@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 public class IceWandItem extends Item {
     private static final double LITE_RANGE = 8.0;
     private static final double FULL_RANGE = 12.0;
-    private static final int FREEZE_DURATION = 80; // 4 seconds
+    private static final int FREEZE_DURATION = 60; // 3 seconds
     private static final int POWDER_SNOW_FREEZE_DURATION = 300; // 15 seconds; power snow visuals kick in at >140 ticks
     private static final int LITE_SLOWNESS_AMPLIFIER = 126; // slowness 127
     private static final int FULL_SLOWNESS_AMPLIFIER = 1; // slowness 2
@@ -246,7 +246,7 @@ public class IceWandItem extends Item {
                 .append(TooltipIcons.icon(TooltipIcons.MANA_ICON))
                 .append(Component.literal(ManaCosts.ICE_WAND_LITE + "-" + ManaCosts.ICE_WAND_FULL).withStyle(ChatFormatting.AQUA)));
         tooltip.accept(Component.literal("For mobs, this ability has an 8 block radius").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("and gives them Slowness 127 for 4 seconds.").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("and freezes them for 3 seconds.").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("For players, this ability has a 12 block").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("radius and gives them Slowness 2 for 4").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("seconds. Both damages the enemies.").withStyle(ChatFormatting.GRAY));
