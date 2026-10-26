@@ -23,10 +23,8 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class PhantomWandItem extends Item {
-    public static final int ABILITY_DURATION = 120; // 6 seconds
     private static final float ATTACK_DAMAGE_BONUS = 1.0f; // 5 total attack damage
     private static final float ATTACK_SPEED = -2.0f;
-    public static final Set<UUID> phantomPlayers = new HashSet<>();
     public static final Set<UUID> pullingPlayers = new HashSet<>();
     public PhantomWandItem(Properties settings) {
         super(ToolMaterial.DIAMOND.applyToolProperties(
@@ -37,21 +35,23 @@ public class PhantomWandItem extends Item {
                 0.0f
         ));
     }
+
     @Override
     public InteractionResult use(Level world, Player player, InteractionHand hand) {
         if (!ManaManager.hasEnough(player, ManaCosts.PHANTOM_WAND)) {
             ManaManager.playInsufficientManaSound(player);
             return InteractionResult.FAIL;
         }
-        if (!world.isClientSide()) {
-            if (!ManaManager.tryConsume(player, ManaCosts.PHANTOM_WAND)) {
-                return InteractionResult.FAIL;
-            }
-            PhantomModeHandler.activatePhantomMode(player, (ServerLevel) world);
-        }
-
-        return InteractionResult.SUCCESS;
+        if (!world.isClientSide() && PhantomWandStalkHandler.isStalking(player)) return InteractionResult.FAIL;
+        player.startUsingItem(hand);
+        return InteractionResult.CONSUME;
     }
+
+    @Override
+    public int getUseDuration(ItemStack stack, LivingEntity user) {
+        return 72000;
+    }
+
     @Override
     public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         super.postHurtEnemy(stack, target, attacker);
@@ -74,12 +74,17 @@ public class PhantomWandItem extends Item {
                 .append(Component.literal(" "))
                 .append(TooltipIcons.icon(TooltipIcons.RIGHT_CLICK_ICON))
                 .append(Component.literal(" "))
-                .append(TooltipIcons.title("Haunt", ChatFormatting.RED))
+                .append(TooltipIcons.title("Stalk", ChatFormatting.RED))
                 .append(Component.literal(" "))
                 .append(TooltipIcons.icon(TooltipIcons.MANA_ICON))
                 .append(Component.literal(String.valueOf(ManaCosts.PHANTOM_WAND)).withStyle(ChatFormatting.AQUA)));
-        tooltip.accept(Component.literal("Allows the player to fly freely. In this state,").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("you receive slowness IV, blindness, and a").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("\uD83D\uDDE1 -80% attack output.").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("Hold for 1s on a target within 8 blocks to").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("teleport behind it and stay stuck there.").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("Lasts 7s on mobs, 5s on players. You deal").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("2x damage to mobs and 1.5x to players.").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("The target gets weakness, blindness and").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("slowness and can't hurt anyone. If you're").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("hit, you're ejected and take 3x damage for").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("3s.").withStyle(ChatFormatting.GRAY));
     }
 }

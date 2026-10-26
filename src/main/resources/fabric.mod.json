@@ -19,7 +19,6 @@
     ],
     "client": [
       "net.sabio.wandsofcombat.client.WandsofcombatClient",
-      "net.sabio.wandsofcombat.client.PhantomSyncClient",
       "net.sabio.wandsofcombat.client.ManaSyncClient"
     ],
     "main": [
