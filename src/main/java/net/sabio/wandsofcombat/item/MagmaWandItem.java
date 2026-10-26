@@ -27,8 +27,6 @@ import java.util.function.Consumer;
 public class MagmaWandItem extends Item {
     private static final float ATTACK_DAMAGE_BONUS = 5.5f; // total: 9.5
     private static final float ATTACK_SPEED = -3.1f;
-    public static final int ABILITY_COOLDOWN = 1200; // 1 min
-    public static final int ULTIMATE_COOLDOWN = 1800; // 1:30mins; yeah we having these now
     public static final int ABILITY_DURATION = 900; // 45 seconds
     public static final int ULTIMATE_DURATION = 600; // 30 seconds
     public static final Map<UUID, Integer> hitCounters = new HashMap<>();
