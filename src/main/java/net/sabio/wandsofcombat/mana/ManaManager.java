@@ -1,5 +1,6 @@
 package net.sabio.wandsofcombat.mana;
 
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -34,6 +35,11 @@ public class ManaManager {
             manaPoints.put(uuid, loaded);
             nextRegenTick.put(uuid, player.level().getGameTime() + effectiveRegenInterval(player));
             syncToClient(player);
+        });
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
+            if (alive) return;
+            setPoints(newPlayer, MAX_MANA_POINTS);
+            nextRegenTick.put(newPlayer.getUUID(), newPlayer.level().getGameTime() + effectiveRegenInterval(newPlayer));
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             UUID uuid = handler.player.getUUID();
