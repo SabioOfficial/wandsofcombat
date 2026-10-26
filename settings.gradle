@@ -7,3 +7,15 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+plugins {
+    id 'dev.kikugie.stonecutter' version '0.9.8'
+}
+
+stonecutter {
+    kotlinController = false
+    centralScript = 'build.gradle'
+    create(rootProject) {
+        versions '26.2'
+    }
+}
