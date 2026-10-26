@@ -28,7 +28,7 @@ public class ElectricWandLightningHandler {
     private static final Map<UUID, LivingEntity> skeletonTargets = new HashMap<>();
     private static final Map<UUID, Long> skeletonNextAttackTick = new HashMap<>();
     private static final Map<UUID, Object[]> pendingSkeletonData = new HashMap<>();
-    private static final int STUN_DURATION = 8; // 1.5 seconds
+    private static final int STUN_DURATION = 30; // 1.5 seconds
     private static final int SKELETON_LIFETIME = 160; // 8 seconds
     private static void scheduleSkeletonSpawn(ServerLevel world, Player summoner, LivingEntity target, long currentTick) {
         UUID key = UUID.randomUUID();

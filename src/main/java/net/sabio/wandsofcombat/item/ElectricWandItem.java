@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 public class ElectricWandItem extends Item {
     private static final float ATTACK_DAMAGE_BONUS = 4.0f; // total atk damage: 8
     private static final float ATTACK_SPEED = -3f;
-    private static final double ABILITY_RANGE = 16.0;
+    private static final double ABILITY_RANGE = 12.0;
     private static final int LIGHTNING_COUNT = 3;
     private static final Map<UUID, Integer> hitCounters = new HashMap<>();
 
