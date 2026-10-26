@@ -15,6 +15,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +50,7 @@ public class IceWandItem extends Item {
             castSoundLevel.playSeededSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_HURT_FREEZE, SoundSource.PLAYERS, 0.6f, 1.6f, castSoundLevel.getRandom().nextLong());
         }
         AABB mobBox = player.getBoundingBox().inflate(LITE_RANGE);
-        List<LivingEntity> nearbyMobs = world.getEntitiesOfClass(LivingEntity.class, mobBox, entity -> !(entity instanceof Player) && !entity.isRemoved());
+        List<LivingEntity> nearbyMobs = world.getEntitiesOfClass(LivingEntity.class, mobBox, entity -> entity instanceof Enemy && !entity.isRemoved());
         for (LivingEntity mob : nearbyMobs) {
             mob.setTicksFrozen(POWDER_SNOW_FREEZE_DURATION);
             mob.addEffect(new MobEffectInstance(
@@ -246,9 +247,10 @@ public class IceWandItem extends Item {
                 .append(TooltipIcons.icon(TooltipIcons.MANA_ICON))
                 .append(Component.literal(ManaCosts.ICE_WAND_LITE + "-" + ManaCosts.ICE_WAND_FULL).withStyle(ChatFormatting.AQUA)));
         tooltip.accept(Component.literal("For mobs, this ability has an 8 block radius").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("and freezes them for 3 seconds.").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("For players, this ability has a 12 block").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("and freezes them for 3 seconds. For").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("players, this ability has a 12 block").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("radius and gives them Slowness 2 for 4").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("seconds. Both damages the enemies.").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("Does not work on friendly mobs.").withStyle(ChatFormatting.GRAY));
     }
 }

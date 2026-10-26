@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
+import net.sabio.wandsofcombat.util.TargetFilter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +78,7 @@ public class ElectricWandItem extends Item {
             if (!ManaManager.tryConsume(player, ManaCosts.ELECTRIC_WAND)) return InteractionResult.FAIL;
             ServerLevel.playSeededSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.TRIDENT_THUNDER, SoundSource.PLAYERS, 1.0f, 1.4f, ServerLevel.getRandom().nextLong());
             AABB box = player.getBoundingBox().inflate(ABILITY_RANGE);
-            List<LivingEntity> targets = world.getEntitiesOfClass(LivingEntity.class, box, entity -> entity != player && !entity.isRemoved());
+            List<LivingEntity> targets = world.getEntitiesOfClass(LivingEntity.class, box, entity -> entity != player && !entity.isRemoved() && TargetFilter.isHostileOrPlayer(entity));
             if (!targets.isEmpty()) {
                 ElectricWandLightningHandler.scheduleAbility(ServerLevel, player, targets, LIGHTNING_COUNT);
             }
@@ -120,6 +121,7 @@ public class ElectricWandItem extends Item {
         tooltip.accept(Component.empty()
                 .append(TooltipIcons.icon(TooltipIcons.SKELETON_ICON))
                 .append(Component.literal(" Skeleton with a stone sword will spawn").withStyle(ChatFormatting.GRAY)));
-        tooltip.accept(Component.literal("to slay the enemy.").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("to slay the enemy. Does not work on").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("friendly mobs.").withStyle(ChatFormatting.GRAY));
     }
 }
