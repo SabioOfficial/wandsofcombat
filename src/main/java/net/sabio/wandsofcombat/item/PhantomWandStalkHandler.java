@@ -27,12 +27,13 @@ import net.sabio.wandsofcombat.entity.PhantomBulletEntity;
 import net.sabio.wandsofcombat.entity.StalkSigilEntity;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
+import net.sabio.wandsofcombat.util.PhantomTargeting;
 
 import java.util.*;
 
 public class PhantomWandStalkHandler {
     // Config
-    private static final double RANGE = 8.0;
+    private static final double RANGE = PhantomTargeting.RANGE;
     private static final int CHANNEL_TICKS = 20;
     private static final int MOB_STUN = 80;
     private static final int PLAYER_STUN = 60;
@@ -140,28 +141,12 @@ public class PhantomWandStalkHandler {
     }
 
     private static LivingEntity findLookedAt(ServerPlayer player) {
-        Vec3 eye = player.getEyePosition();
-        Vec3 reach = player.getLookAngle().scale(RANGE);
-        Vec3 end = eye.add(reach);
-        AABB sweep = player.getBoundingBox().expandTowards(reach).inflate(1.0);
-        LivingEntity nearest = null;
-        double nearestDist = Double.MAX_VALUE;
-        for (Entity e : player.level().getEntities(player, sweep, ent -> ent instanceof LivingEntity && ent.isAlive() && !ent.isSpectator())) {
-            Optional<Vec3> hit = e.getBoundingBox().inflate(e.getPickRadius()).clip(eye, end);
-            if (hit.isEmpty()) continue;
-            double dist = eye.distanceToSqr(hit.get());
-            if (dist < nearestDist) {
-                nearestDist = dist;
-                nearest = (LivingEntity) e;
-            }
-        }
+        LivingEntity nearest = PhantomTargeting.findLookedAt(player);
         return nearest != null && isValidTarget(nearest) ? nearest : null;
     }
 
     private static boolean isValidTarget(LivingEntity target) {
-        EntityType<?> type = target.getType();
-        if (type == EntityTypes.WITHER || type == EntityTypes.ENDER_DRAGON || type == EntityTypes.WARDEN) return false;
-        if (target instanceof Player p && p.isSpectator()) return false;
+        if (!PhantomTargeting.isValidType(target)) return false;
         return !byVictim.containsKey(target.getUUID()) && !byStalker.containsKey(target.getUUID());
     }
 
