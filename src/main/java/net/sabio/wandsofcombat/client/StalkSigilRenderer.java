@@ -12,6 +12,8 @@ import net.sabio.wandsofcombat.entity.StalkSigilEntity;
 import org.joml.Quaternionf;
 
 public class StalkSigilRenderer extends EntityRenderer<StalkSigilEntity, StalkSigilRenderer.State> {
+    private static final boolean SMOOTH_SPIN = true;
+
     public static class State extends EntityRenderState {
         public float age;
         public int life;
@@ -39,6 +41,19 @@ public class StalkSigilRenderer extends EntityRenderer<StalkSigilEntity, StalkSi
         state.large = entity.isLarge();
     }
 
+    private static float spinAngle(float age, int life) {
+        float t = Math.min(age, (float) life);
+        float l = Math.max(1, life);
+        float extra = t * 0.5f - l / (4.0f * (float) Math.PI) * Mth.sin(2.0f * (float) Math.PI * t / l);
+        return 0.03f * t + (0.5f - 0.03f) * extra;
+    }
+
+    private static float snap(float angle) {
+        if (SMOOTH_SPIN) return angle;
+        float quarter = (float) (Math.PI / 2.0);
+        return Math.round(angle / quarter) * quarter;
+    }
+
     @Override
     public void submit(State state, PoseStack pose, SubmitNodeCollector collector, CameraRenderState camera) {
         float fadeIn = Math.min(1.0f, state.age / StalkSigilEntity.FADE_IN);
@@ -51,12 +66,13 @@ public class StalkSigilRenderer extends EntityRenderer<StalkSigilEntity, StalkSi
         float innerPx = state.large ? 30 : 20;
 
         Quaternionf flat = new Quaternionf().rotationX((float) (-Math.PI / 2.0));
-        int quarter = ((int) (state.age / 6)) & 3;
-        Quaternionf wheel = new Quaternionf(flat).rotateZ(quarter * (float) (Math.PI / 2.0));
+        float spin = spinAngle(state.age, state.life);
+        Quaternionf wheel = new Quaternionf(flat).rotateZ(snap(spin));
+        Quaternionf ring = new Quaternionf(flat).rotateZ(snap(spin * -0.5f));
 
         pose.pushPose();
         pose.translate(0.0, 0.02f, 0.0);
-        PixelQuad.draw(pose, collector, state.large ? id("textures/entity/stalk_sigil_large.png") : id("textures/entity/stalk_sigil_small.png"), flat, outerPx * (1.0f / 16.0f), alpha * pulse);
+        PixelQuad.draw(pose, collector, state.large ? id("textures/entity/stalk_sigil_large.png") : id("textures/entity/stalk_sigil_small.png"), ring, outerPx * (1.0f / 16.0f), alpha * pulse);
         pose.translate(0.0, 0.02f, 0.0);
         PixelQuad.draw(pose, collector, state.large ? id("textures/entity/stalk_sigil_inner_large.png") : id("textures/entity/stalk_sigil_inner_small.png"), wheel, innerPx * (1.0f / 16.0f), alpha);
         pose.popPose();
