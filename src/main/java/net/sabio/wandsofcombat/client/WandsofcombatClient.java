@@ -4,10 +4,10 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
-import net.minecraft.client.KeyMapping;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;import net.fabricmc.fabric.impl.client.rendering.EntityRendererRegistryImpl;import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import net.sabio.wandsofcombat.Wandsofcombat;
-import net.sabio.wandsofcombat.item.MagnetTogglePacket;
+import net.sabio.wandsofcombat.entity.ModEntities;import net.sabio.wandsofcombat.item.MagnetTogglePacket;
 //? if <26.3 {
 /*import org.lwjgl.glfw.GLFW;
 *///?}
@@ -41,5 +41,7 @@ public class WandsofcombatClient implements ClientModInitializer {
                 MagnetTogglePacket.sendToggle();
             }
         });
+        EntityRendererRegistry.register(ModEntities.PHANTOM_BULLET, PhantomBulletRenderer::new);
+        EntityRendererRegistry.register(ModEntities.STALK_SIGIL, StalkSigilRenderer::new);
     }
 }

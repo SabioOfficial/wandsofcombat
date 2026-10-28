@@ -2,6 +2,7 @@ package net.sabio.wandsofcombat;
 
 import net.fabricmc.api.ModInitializer;
 import net.sabio.wandsofcombat.effect.ModEffects;
+import net.sabio.wandsofcombat.entity.ModEntities;
 import net.sabio.wandsofcombat.item.*;
 import net.sabio.wandsofcombat.mana.ManaManager;
 import net.sabio.wandsofcombat.network.ManaSyncPacket;
@@ -22,6 +23,7 @@ public class Wandsofcombat implements ModInitializer {
         ElectricWandPassiveHandler.initialize();
         LightningStrikeHandler.initialize();
         PhantomModeHandler.initialize();
+        ModEntities.init();
         PhantomWandStalkHandler.initialize();
         PullAttackScheduler.initialize();
         MagmaWandHandler.initialize();
