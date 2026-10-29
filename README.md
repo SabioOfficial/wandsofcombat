@@ -37,8 +37,6 @@ This item is used to craft for all craftable wands. It is a mix between diamonds
 
 ![The crafting recipe for the magnet wand. It is 1 magical stick on the bottom left corner, 1 magical stick in the center and 1 iron block in the top right.](https://cdn.modrinth.com/data/cached_images/ac52bc8220a552096cabe6983c63d4b1a1c3fe9e.png)
 
-A support class wand that can pull and repel entities. This wand is the only wand to have alternate abilities.
-
 ![Ice Wand](https://cdn.modrinth.com/data/cached_images/1ed73921c074e0d97be85b486568ea83c82f765e.png)
 
 ![A crafting recipe for the ice wand. One magical stick in the bottom left corner, one breeze rod in the center, one blue ice on the top right corner, one blue ice on the center right slot, one blue ice on the top center slot.](https://cdn.modrinth.com/data/cached_images/2ed7c1da46a88359efcd5a0f0e92e96b709d79a6.png)
