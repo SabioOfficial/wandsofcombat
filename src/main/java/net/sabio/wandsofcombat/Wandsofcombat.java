@@ -25,6 +25,7 @@ public class Wandsofcombat implements ModInitializer {
         PhantomModeHandler.initialize();
         ModEntities.init();
         PhantomWandStalkHandler.initialize();
+        PhantomWandComboHandler.initialize();
         PullAttackScheduler.initialize();
         MagmaWandHandler.initialize();
         IceWandComboHandler.initialize();

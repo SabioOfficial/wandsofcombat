@@ -2,7 +2,6 @@ package net.sabio.wandsofcombat.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -16,6 +15,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +53,10 @@ public class PhantomWandItem extends Item {
     }
 
     @Override
-    public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public void postHurtEnemy(@NonNull ItemStack stack, @NonNull LivingEntity target, @NonNull LivingEntity attacker) {
+        if (attacker instanceof Player player && !attacker.level().isClientSide()) {
+            PhantomWandComboHandler.onHit(player, target);
+        }
         super.postHurtEnemy(stack, target, attacker);
     }
 
@@ -67,6 +70,15 @@ public class PhantomWandItem extends Item {
                 .append(TooltipIcons.title("Latching", ChatFormatting.AQUA)));
         tooltip.accept(Component.literal("Interaction range is increased by 2 blocks").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("and allows the user to \"latch\" onto enemies.").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.empty());
+
+        tooltip.accept(Component.empty()
+                .append(TooltipIcons.icon(TooltipIcons.BADGE_COMBO))
+                .append(Component.literal(" "))
+                .append(TooltipIcons.title("Shadow Step", ChatFormatting.GOLD))
+                .append(Component.literal(" \uD83D\uDDE16").withStyle(ChatFormatting.WHITE)));
+        tooltip.accept(Component.literal("You blink behind the target, and your next").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("hit within 2s does 1.5x damage.").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.empty());
 
         tooltip.accept(Component.empty()
