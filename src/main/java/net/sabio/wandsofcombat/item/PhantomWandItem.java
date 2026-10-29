@@ -74,17 +74,14 @@ public class PhantomWandItem extends Item {
                 .append(Component.literal(" "))
                 .append(TooltipIcons.icon(TooltipIcons.RIGHT_CLICK_ICON))
                 .append(Component.literal(" "))
-                .append(TooltipIcons.title("Stalk", ChatFormatting.RED))
+                .append(TooltipIcons.title("Dread", ChatFormatting.RED))
                 .append(Component.literal(" "))
                 .append(TooltipIcons.icon(TooltipIcons.MANA_ICON))
                 .append(Component.literal(String.valueOf(ManaCosts.PHANTOM_WAND)).withStyle(ChatFormatting.AQUA)));
         tooltip.accept(Component.literal("Hold for 1s on a target within 8 blocks to").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("teleport behind it and stay stuck there.").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("Lasts 7s on mobs, 5s on players. You deal").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("2x damage to mobs and 1.5x to players.").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("The target gets weakness, blindness and").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("slowness and can't hurt anyone. If you're").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("hit, you're ejected and take 3x damage for").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("3s.").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("freeze it for 4s (3s on players). It can't").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("move, jump or hurt anyone while spectral").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("bullets strike it for 1.5 damage each (1").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("on players), ignoring armor.").withStyle(ChatFormatting.GRAY));
     }
 }
