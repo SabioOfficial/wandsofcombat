@@ -99,3 +99,11 @@ publishing {
         // retrieving dependencies.
     }
 }
+
+loom {
+    runs {
+        configureEach {
+            vmArg "-Dfabric-tag-conventions-v2.missingTagTranslationWarning=VERBOSE"
+        }
+    }
+}
