@@ -19,6 +19,7 @@
 - **Lots** of **new** mechanics
 - A **Mana System**
 - Potions + **Custom** Effects
+- In-game **ability** descriptions
 
 ![hr](https://cdn.modrinth.com/data/cached_images/f9ef6b8eb5bc66fcf87cd276409f6705a1fbc79b.png)
 
