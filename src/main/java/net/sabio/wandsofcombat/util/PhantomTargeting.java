@@ -34,10 +34,10 @@ public final class PhantomTargeting {
         return nearest;
     }
 
-    public static boolean isValidType(LivingEntity target) {
+    public static boolean isInvalidType(LivingEntity target) {
         EntityType<?> type = target.getType();
-        if (type == EntityTypes.WITHER || type == EntityTypes.ENDER_DRAGON || type == EntityTypes.WARDEN) return false;
-        return !(target instanceof Player p && p.isSpectator());
+        if (type == EntityTypes.WITHER || type == EntityTypes.ENDER_DRAGON || type == EntityTypes.WARDEN) return true;
+        return target instanceof Player p && p.isSpectator();
     }
 
     public static double distanceToBox(Vec3 point, AABB box) {

@@ -97,10 +97,7 @@ public class MagmaWandItem extends Item {
         super.postHurtEnemy(stack, target, attacker);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, context, displayComponent, tooltip, flag);
-
+    public static void addTooltip(Consumer<Component> tooltip) {
         tooltip.accept(Component.empty()
                 .append(TooltipIcons.icon(TooltipIcons.BADGE_PASSIVE))
                 .append(Component.literal(" "))

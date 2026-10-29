@@ -1,6 +1,7 @@
 package net.sabio.wandsofcombat;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
 import net.sabio.wandsofcombat.effect.ModEffects;
 import net.sabio.wandsofcombat.entity.ModEntities;
 import net.sabio.wandsofcombat.item.*;
@@ -18,6 +19,7 @@ public class Wandsofcombat implements ModInitializer {
     @Override
     public void onInitialize() {
         ModItems.initialize();
+        ItemComponentTooltipProviderRegistry.addFirst(WandTooltip.TYPE);
         MagnetPullManager.initialize();
         ElectricWandLightningHandler.initialize();
         ElectricWandPassiveHandler.initialize();

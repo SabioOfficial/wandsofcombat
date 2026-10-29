@@ -20,7 +20,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.sabio.wandsofcombat.entity.ModEntities;
 import net.sabio.wandsofcombat.entity.PhantomBulletEntity;
@@ -146,7 +145,7 @@ public class PhantomWandStalkHandler {
     }
 
     private static boolean isValidTarget(LivingEntity target) {
-        if (!PhantomTargeting.isValidType(target)) return false;
+        if (PhantomTargeting.isInvalidType(target)) return false;
         return !byVictim.containsKey(target.getUUID()) && !byStalker.containsKey(target.getUUID());
     }
 

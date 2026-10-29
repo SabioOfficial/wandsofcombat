@@ -24,7 +24,7 @@ public class ModItems {
     public static final MagnetWandItem MAGNET_WAND = Registry.register(
             BuiltInRegistries.ITEM,
             MAGNET_WAND_KEY,
-            new MagnetWandItem(new Item.Properties().setId(MAGNET_WAND_KEY))
+            new MagnetWandItem(new Item.Properties().setId(MAGNET_WAND_KEY).component(WandTooltip.TYPE, new WandTooltip(WandTooltip.Wand.MAGNET)))
     );
 
     public static final ResourceKey<Item> ICE_WAND_KEY = ResourceKey.create(
@@ -35,7 +35,7 @@ public class ModItems {
     public static final IceWandItem ICE_WAND = Registry.register(
             BuiltInRegistries.ITEM,
             ICE_WAND_KEY,
-            new IceWandItem(new Item.Properties().setId(ICE_WAND_KEY))
+            new IceWandItem(new Item.Properties().setId(ICE_WAND_KEY).component(WandTooltip.TYPE, new WandTooltip(WandTooltip.Wand.ICE)))
     );
 
     public static final ResourceKey<Item> ELECTRIC_WAND_KEY = ResourceKey.create(
@@ -46,7 +46,7 @@ public class ModItems {
     public static final ElectricWandItem ELECTRIC_WAND = Registry.register(
             BuiltInRegistries.ITEM,
             ELECTRIC_WAND_KEY,
-            new ElectricWandItem(new Item.Properties().setId(ELECTRIC_WAND_KEY))
+            new ElectricWandItem(new Item.Properties().setId(ELECTRIC_WAND_KEY).component(WandTooltip.TYPE, new WandTooltip(WandTooltip.Wand.ELECTRIC)))
     );
 
     public static final ResourceKey<Item> PHANTOM_WAND_KEY = ResourceKey.create(
@@ -57,7 +57,7 @@ public class ModItems {
     public static final PhantomWandItem PHANTOM_WAND = Registry.register(
             BuiltInRegistries.ITEM,
             PHANTOM_WAND_KEY,
-            new PhantomWandItem(new Item.Properties().setId(PHANTOM_WAND_KEY))
+            new PhantomWandItem(new Item.Properties().setId(PHANTOM_WAND_KEY).component(WandTooltip.TYPE, new WandTooltip(WandTooltip.Wand.PHANTOM)))
     );
 
     public static final ResourceKey<Item> MAGMA_WAND_KEY = ResourceKey.create(
@@ -68,7 +68,7 @@ public class ModItems {
     public static final MagmaWandItem MAGMA_WAND = Registry.register(
             BuiltInRegistries.ITEM,
             MAGMA_WAND_KEY,
-            new MagmaWandItem(new Item.Properties().setId(MAGMA_WAND_KEY))
+            new MagmaWandItem(new Item.Properties().setId(MAGMA_WAND_KEY).component(WandTooltip.TYPE, new WandTooltip(WandTooltip.Wand.MAGMA)))
     );
 
     public static final ResourceKey<Item> MAGICAL_STICK_KEY = ResourceKey.create(

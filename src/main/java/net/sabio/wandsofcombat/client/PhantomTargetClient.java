@@ -53,7 +53,7 @@ public final class PhantomTargetClient {
         if (!using) armed = true;
 
         LivingEntity looked = PhantomTargeting.findLookedAt(player);
-        if (looked != null && (!PhantomTargeting.isValidType(looked) || !player.hasLineOfSight(looked))) looked = null;
+        if (looked != null && (PhantomTargeting.isInvalidType(looked) || !player.hasLineOfSight(looked))) looked = null;
 
         if (locked != null && (!using || !canKeep(player, locked))) {
             if (using) armed = false;
