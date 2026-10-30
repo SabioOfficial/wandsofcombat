@@ -12,12 +12,17 @@ import java.util.Optional;
 
 public final class PhantomTargeting {
     public static final double RANGE = 8.0;
+    public static final double ULTIMATE_RANGE = 12.0;
 
     private PhantomTargeting() {}
 
     public static LivingEntity findLookedAt(Player player) {
+        return findLookedAt(player, RANGE);
+    }
+
+    public static LivingEntity findLookedAt(Player player, double range) {
         Vec3 eye = player.getEyePosition();
-        Vec3 reach = player.getLookAngle().scale(RANGE);
+        Vec3 reach = player.getLookAngle().scale(range);
         Vec3 end = eye.add(reach);
         AABB sweep = player.getBoundingBox().expandTowards(reach).inflate(1.0);
         LivingEntity nearest = null;

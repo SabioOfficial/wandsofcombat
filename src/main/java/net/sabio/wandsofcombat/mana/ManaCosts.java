@@ -13,6 +13,7 @@ public final class ManaCosts {
     public static final int ICE_WAND_FULL = 5;
     public static final int ELECTRIC_WAND = 4;
     public static final int PHANTOM_WAND = 5;
+    public static final int PHANTOM_ULTIMATE = 8;
     public static final int MAGMA_ABILITY = 3;
     public static final int MAGMA_ULTIMATE = 8;
 
@@ -24,7 +25,7 @@ public final class ManaCosts {
             case IceWandItem iceWandItem -> ICE_WAND_LITE;
             case ElectricWandItem electricWandItem -> ELECTRIC_WAND;
             case MagnetWandItem magnetWandItem -> MAGNET_WAND;
-            case PhantomWandItem phantomWandItem -> PHANTOM_WAND;
+            case PhantomWandItem phantomWandItem -> player.isCrouching() ? PHANTOM_ULTIMATE : PHANTOM_WAND ;
             default -> -1;
         };
     }

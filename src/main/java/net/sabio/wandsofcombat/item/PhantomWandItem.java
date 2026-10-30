@@ -2,6 +2,7 @@ package net.sabio.wandsofcombat.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.level.Level;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
+import net.sabio.wandsofcombat.util.PhantomTargeting;
 import org.jspecify.annotations.NonNull;
 
 import java.util.HashSet;
@@ -36,6 +38,7 @@ public class PhantomWandItem extends Item {
 
     @Override
     public InteractionResult use(Level world, Player player, InteractionHand hand) {
+        if (player.isCrouching()) return useUltimate(world, player);
         if (!ManaManager.hasEnough(player, ManaCosts.PHANTOM_WAND)) {
             ManaManager.playInsufficientManaSound(player);
             return InteractionResult.FAIL;
@@ -43,6 +46,22 @@ public class PhantomWandItem extends Item {
         if (!world.isClientSide() && PhantomWandStalkHandler.isStalking(player)) return InteractionResult.FAIL;
         player.startUsingItem(hand);
         return InteractionResult.CONSUME;
+    }
+
+    private static InteractionResult useUltimate(Level world, Player player) {
+        if (!ManaManager.hasEnough(player, ManaCosts.PHANTOM_ULTIMATE)) {
+            ManaManager.playInsufficientManaSound(player);
+            return InteractionResult.FAIL;
+        }
+        LivingEntity target = PhantomTargeting.findLookedAt(player, PhantomTargeting.ULTIMATE_RANGE);
+        if (target == null || PhantomTargeting.isInvalidType(target) || !player.hasLineOfSight(target)) {
+            return InteractionResult.FAIL;
+        }
+        if (!world.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+            if (PhantomWandStalkHandler.isStalking(player)) return InteractionResult.FAIL;
+            if (!PhantomWandUltimateHandler.tryCast(serverPlayer, target)) return InteractionResult.FAIL;
+        }
+        return InteractionResult.SUCCESS;
     }
 
     @Override

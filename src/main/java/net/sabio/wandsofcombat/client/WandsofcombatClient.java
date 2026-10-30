@@ -44,5 +44,6 @@ public class WandsofcombatClient implements ClientModInitializer {
         });
         EntityRendererRegistry.register(ModEntities.PHANTOM_BULLET, PhantomBulletRenderer::new);
         EntityRendererRegistry.register(ModEntities.STALK_SIGIL, StalkSigilRenderer::new);
+        EntityRendererRegistry.register(ModEntities.PHANTOM_REPLICA, PhantomReplicaRenderer::new);
     }
 }

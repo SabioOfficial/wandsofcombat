@@ -52,7 +52,8 @@ public final class PhantomTargetClient {
         boolean using = player.isUsingItem() && player.getUseItem().getItem() instanceof PhantomWandItem;
         if (!using) armed = true;
 
-        LivingEntity looked = PhantomTargeting.findLookedAt(player);
+        double range = !using && player.isCrouching() ? PhantomTargeting.ULTIMATE_RANGE : PhantomTargeting.RANGE;
+        LivingEntity looked = PhantomTargeting.findLookedAt(player, range);
         if (looked != null && (PhantomTargeting.isInvalidType(looked) || !player.hasLineOfSight(looked))) looked = null;
 
         if (locked != null && (!using || !canKeep(player, locked))) {

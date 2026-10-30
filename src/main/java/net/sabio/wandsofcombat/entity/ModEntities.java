@@ -33,5 +33,17 @@ public class ModEntities {
                     .noSave()
                     .build(STALK_SIGIL_KEY));
 
+    private static final ResourceKey<EntityType<?>> PHANTOM_REPLICA_KEY = ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("wandsofcombat", "phantom_replica"));
+
+    public static final EntityType<PhantomReplicaEntity> PHANTOM_REPLICA = Registry.register(
+            BuiltInRegistries.ENTITY_TYPE,
+            PHANTOM_REPLICA_KEY,
+            EntityType.Builder.<PhantomReplicaEntity>of(PhantomReplicaEntity::new, MobCategory.MISC)
+                    .sized(0.6f, 1.8f)
+                    .clientTrackingRange(8)
+                    .updateInterval(1)
+                    .noSave()
+                    .build(PHANTOM_REPLICA_KEY));
+
     public static void init() {}
 }
