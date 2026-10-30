@@ -17,6 +17,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.sabio.wandsofcombat.util.HitUtil;
 
 public class PhantomBulletEntity extends Projectile {
     // Config
@@ -133,12 +134,7 @@ public class PhantomBulletEntity extends Projectile {
 
     private void impact() {
         if (level() instanceof ServerLevel sl) {
-            //? if>=26.3 {
-            target.setInvulnerableTime(0);
-            //?} else {
-            /*target.invulnerableTime = 0;
-            *///?}
-            target.hurtServer(sl, damageSources().indirectMagic(this, getOwner()), damage);
+            HitUtil.hurtThroughIFrames(sl, target, HitUtil.wandMagic(sl, this, getOwner()), damage);
             float pitch = 0.9f + slot * 0.12f + random.nextFloat() * 0.05f;
             sl.playSound(null, getX(), getY(), getZ(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.9f, pitch);
             sl.playSound(null, getX(), getY(), getZ(), SoundEvents.AMETHYST_CLUSTER_HIT, SoundSource.PLAYERS, 0.8f, pitch * 0.9f);

@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
+import net.sabio.wandsofcombat.util.HitUtil;
 import net.sabio.wandsofcombat.util.TargetFilter;
 
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class ElectricWandItem extends Item {
         lightning.snapTo(target.getX(), target.getY(), target.getZ());
         lightning.setVisualOnly(true);
         world.addFreshEntity(lightning);
-        target.hurtServer(world, world.damageSources().indirectMagic(attacker, attacker), 5.0f);
+        HitUtil.hurtThroughIFrames(world, target, HitUtil.wandMagic(world, attacker, attacker), 5.0f);
     }
 
     @Override
