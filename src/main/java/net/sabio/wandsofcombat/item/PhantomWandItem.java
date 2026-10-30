@@ -109,5 +109,22 @@ public class PhantomWandItem extends Item {
         tooltip.accept(Component.literal("move, jump or hurt anyone while spectral").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("bullets strike it for 1.5 damage each (1").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("on players), ignoring armor.").withStyle(ChatFormatting.GRAY));
+
+        tooltip.accept(Component.empty()
+                .append(TooltipIcons.icon(TooltipIcons.BADGE_ULTIMATE))
+                .append(Component.literal(" "))
+                .append(Component.literal("Crouch").withStyle(ChatFormatting.BOLD, ChatFormatting.UNDERLINE, ChatFormatting.WHITE))
+                .append(Component.literal(" "))
+                .append(TooltipIcons.icon(TooltipIcons.RIGHT_CLICK_ICON))
+                .append(Component.literal(" "))
+                .append(TooltipIcons.title("Hallucinizer", ChatFormatting.DARK_PURPLE))
+                .append(Component.literal(" "))
+                .append(TooltipIcons.icon(TooltipIcons.MANA_ICON))
+                .append(Component.literal(String.valueOf(ManaCosts.PHANTOM_ULTIMATE)).withStyle(ChatFormatting.AQUA)));
+        tooltip.accept(Component.literal("Launch 8 replicas of yourself in a ring").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("at a target within 12 blocks. Each lands").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("for 4 damage (1.5 on players), ignoring").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("armor. Weakens mobs for 4s and gives").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("players nausea for 5s.").withStyle(ChatFormatting.GRAY));
     }
 }

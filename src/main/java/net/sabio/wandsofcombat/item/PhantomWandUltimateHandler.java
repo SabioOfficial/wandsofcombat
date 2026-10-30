@@ -82,7 +82,7 @@ public class PhantomWandUltimateHandler {
         if (victim instanceof Player) {
             victim.addEffect(new MobEffectInstance(MobEffects.NAUSEA, PLAYER_NAUSEA_TICKS, 0, false, true, true));
         } else {
-            victim.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, MOB_BLINDNESS_TICKS, 0, false, true, true));
+            victim.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, MOB_BLINDNESS_TICKS, 2, false, true, true));
         }
 
         cue(level, victim.position(), SoundEvents.ILLUSIONER_CAST_SPELL, 0.9f, 0.7f);
