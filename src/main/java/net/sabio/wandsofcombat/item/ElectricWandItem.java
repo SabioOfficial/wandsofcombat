@@ -15,6 +15,7 @@ import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
 import net.sabio.wandsofcombat.util.HitUtil;
 import net.sabio.wandsofcombat.util.TargetFilter;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +60,7 @@ public class ElectricWandItem extends WandItem {
     }
 
     @Override
-    public InteractionResult use(Level world, Player player, InteractionHand hand) {
+    public @NonNull InteractionResult use(@NonNull Level world, @NonNull Player player, @NonNull InteractionHand hand) {
         if (!canAfford(player, ManaCosts.ELECTRIC_WAND)) return InteractionResult.FAIL;
         if (!world.isClientSide()) {
             ServerLevel ServerLevel = (ServerLevel) world;
