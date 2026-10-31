@@ -2,23 +2,18 @@ package net.sabio.wandsofcombat.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ToolMaterial;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
 
 import java.util.function.Consumer;
 
-public class MagnetWandItem extends Item {
+public class MagnetWandItem extends WandItem {
     private static final float ATTACK_DAMAGE_BONUS = 3.0f;
     private static final float ATTACK_SPEED = -2.7f;
     private static final double ABILITY_PULL_RANGE = 12.0;
@@ -26,30 +21,23 @@ public class MagnetWandItem extends Item {
     private static final float REPEL_DAMAGE = 8.0f;
 
     public MagnetWandItem(Properties settings) {
-        super(ToolMaterial.DIAMOND.applyToolProperties(
-                settings,
-                BlockTags.SWORD_EFFICIENT,
-                ATTACK_DAMAGE_BONUS,
-                ATTACK_SPEED,
-                0.0f
-        ));
+        super(settings, ATTACK_DAMAGE_BONUS, ATTACK_SPEED);
     }
 
     @Override
-    public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (attacker instanceof Player player && !attacker.level().isClientSide()) {
-            MagnetPullManager.recordHit(player, target);
-        }
-        super.postHurtEnemy(stack, target, attacker);
+    public int castCost(Player player) {
+        return ManaCosts.MAGNET_WAND;
+    }
+
+    @Override
+    protected void onWandHit(ServerLevel level, Player player, LivingEntity target) {
+        MagnetPullManager.recordHit(player, target);
     }
 
     @Override
     public InteractionResult use(Level world, Player player, InteractionHand hand) {
         if (hand == InteractionHand.OFF_HAND) return InteractionResult.PASS;
-        if (!ManaManager.hasEnough(player, ManaCosts.MAGNET_WAND)) {
-            ManaManager.playInsufficientManaSound(player);
-            return InteractionResult.FAIL;
-        }
+        if (!canAfford(player, ManaCosts.MAGNET_WAND)) return InteractionResult.FAIL;
         if (!world.isClientSide()) {
             if (!ManaManager.tryConsume(player, ManaCosts.MAGNET_WAND)) return InteractionResult.FAIL;
             if (MagnetPullManager.isRepelMode(player)) {

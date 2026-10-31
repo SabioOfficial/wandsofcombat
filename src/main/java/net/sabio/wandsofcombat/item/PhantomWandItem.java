@@ -2,47 +2,41 @@ package net.sabio.wandsofcombat.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.level.Level;
 import net.sabio.wandsofcombat.mana.ManaCosts;
 import net.sabio.wandsofcombat.mana.ManaManager;
 import net.sabio.wandsofcombat.util.PhantomTargeting;
-import org.jspecify.annotations.NonNull;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class PhantomWandItem extends Item {
+public class PhantomWandItem extends WandItem {
     private static final float ATTACK_DAMAGE_BONUS = 1.0f; // 5 total attack damage
     private static final float ATTACK_SPEED = -2.0f;
     public static final Set<UUID> pullingPlayers = new HashSet<>();
+
     public PhantomWandItem(Properties settings) {
-        super(ToolMaterial.DIAMOND.applyToolProperties(
-                settings,
-                BlockTags.SWORD_EFFICIENT,
-                ATTACK_DAMAGE_BONUS,
-                ATTACK_SPEED,
-                0.0f
-        ));
+        super(settings, ATTACK_DAMAGE_BONUS, ATTACK_SPEED);
+    }
+
+    @Override
+    public int castCost(Player player) {
+        return isUltimateInput(player) ? ManaCosts.PHANTOM_ULTIMATE : ManaCosts.PHANTOM_WAND;
     }
 
     @Override
     public InteractionResult use(Level world, Player player, InteractionHand hand) {
-        if (player.isCrouching()) return useUltimate(world, player);
-        if (!ManaManager.hasEnough(player, ManaCosts.PHANTOM_WAND)) {
-            ManaManager.playInsufficientManaSound(player);
-            return InteractionResult.FAIL;
-        }
+        if (isUltimateInput(player)) return useUltimate(world, player);
+        if (!canAfford(player, ManaCosts.PHANTOM_WAND)) return InteractionResult.FAIL;
         if (!world.isClientSide() && PhantomWandStalkHandler.isStalking(player)) return InteractionResult.FAIL;
         player.startUsingItem(hand);
         return InteractionResult.CONSUME;
@@ -70,11 +64,8 @@ public class PhantomWandItem extends Item {
     }
 
     @Override
-    public void postHurtEnemy(@NonNull ItemStack stack, @NonNull LivingEntity target, @NonNull LivingEntity attacker) {
-        if (attacker instanceof Player player && !attacker.level().isClientSide()) {
-            PhantomWandComboHandler.onHit(player, target);
-        }
-        super.postHurtEnemy(stack, target, attacker);
+    protected void onWandHit(ServerLevel level, Player player, LivingEntity target) {
+        PhantomWandComboHandler.onHit(player, target);
     }
 
     public static void addTooltip(Consumer<Component> tooltip) {

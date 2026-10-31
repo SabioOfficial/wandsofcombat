@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,11 +16,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ToolMaterial;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -33,7 +27,7 @@ import net.sabio.wandsofcombat.util.VelocitySync;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class IceWandItem extends Item {
+public class IceWandItem extends WandItem {
     private static final double LITE_RANGE = 8.0;
     private static final double FULL_RANGE = 12.0;
     private static final int FREEZE_DURATION = 60; // 3 seconds
@@ -42,6 +36,37 @@ public class IceWandItem extends Item {
     private static final int FULL_SLOWNESS_AMPLIFIER = 1; // slowness 2
     private static final float ATTACK_SPEED = -3.3f;
     private static final float ATTACK_DAMAGE_BONUS = 8.0f; // 12 total attack damage
+
+    public IceWandItem(Properties settings) {
+        super(settings, ATTACK_DAMAGE_BONUS, ATTACK_SPEED);
+    }
+
+    @Override
+    public int castCost(Player player) {
+        return ManaCosts.ICE_WAND_LITE;
+    }
+
+    @Override
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
+        if (!canAfford(player, ManaCosts.ICE_WAND_LITE)) return InteractionResult.FAIL;
+        if (!world.isClientSide()) {
+            if (!ManaManager.tryConsume(player, ManaCosts.ICE_WAND_LITE)) {
+                return InteractionResult.FAIL;
+            }
+            boolean hitPlayer = applyAbility(world, player);
+            if (hitPlayer) {
+                int extraCost = ManaCosts.ICE_WAND_FULL - ManaCosts.ICE_WAND_LITE;
+                ManaManager.tryConsume(player, extraCost);
+            }
+        }
+
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected void onWandHit(ServerLevel level, Player player, LivingEntity target) {
+        IceWandComboHandler.onHit(player, target);
+    }
 
     private boolean applyAbility(Level world, Player player) {
         boolean hitPlayer = false;
@@ -181,45 +206,6 @@ public class IceWandItem extends Item {
         }
 
         return hitPlayer;
-    }
-
-    public IceWandItem(Properties settings) {
-        super(ToolMaterial.DIAMOND.applyToolProperties(
-                settings,
-                BlockTags.SWORD_EFFICIENT,
-                ATTACK_DAMAGE_BONUS,
-                ATTACK_SPEED,
-                0.0f
-        ));
-    }
-
-    @Override
-    public InteractionResult use(Level world, Player player, InteractionHand hand) {
-        if (!ManaManager.hasEnough(player, ManaCosts.ICE_WAND_LITE)) {
-            ManaManager.playInsufficientManaSound(player);
-            return InteractionResult.FAIL;
-        }
-        if (!world.isClientSide()) {
-            if (!ManaManager.tryConsume(player, ManaCosts.ICE_WAND_LITE)) {
-                return InteractionResult.FAIL;
-            }
-            boolean hitPlayer = applyAbility(world, player);
-            if (hitPlayer) {
-                int extraCost = ManaCosts.ICE_WAND_FULL - ManaCosts.ICE_WAND_LITE;
-                ManaManager.tryConsume(player, extraCost);
-            }
-        }
-
-        return InteractionResult.SUCCESS;
-    }
-
-
-    @Override
-    public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (attacker instanceof Player player && !attacker.level().isClientSide()) {
-            IceWandComboHandler.onHit(player, target);
-        }
-        super.postHurtEnemy(stack, target, attacker);
     }
 
     public static void addTooltip(Consumer<Component> tooltip) {

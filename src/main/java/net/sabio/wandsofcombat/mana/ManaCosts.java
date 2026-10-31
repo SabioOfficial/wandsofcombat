@@ -1,8 +1,6 @@
 package net.sabio.wandsofcombat.mana;
 
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.sabio.wandsofcombat.item.*;
 
 public final class ManaCosts {
@@ -18,15 +16,6 @@ public final class ManaCosts {
     public static final int MAGMA_ULTIMATE = 8;
 
     public static int nextCastCost(Player player) {
-        ItemStack held = player.getMainHandItem();
-        Item item = held.getItem();
-        return switch (item) {
-            case MagmaWandItem magmaWandItem -> player.isCrouching() ? MAGMA_ULTIMATE : MAGMA_ABILITY;
-            case IceWandItem iceWandItem -> ICE_WAND_LITE;
-            case ElectricWandItem electricWandItem -> ELECTRIC_WAND;
-            case MagnetWandItem magnetWandItem -> MAGNET_WAND;
-            case PhantomWandItem phantomWandItem -> player.isCrouching() ? PHANTOM_ULTIMATE : PHANTOM_WAND ;
-            default -> -1;
-        };
+        return player.getMainHandItem().getItem() instanceof WandItem wand ? wand.castCost(player) : -1;
     }
 }

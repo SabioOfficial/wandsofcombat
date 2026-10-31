@@ -4,17 +4,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ToolMaterial;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.sabio.wandsofcombat.mana.ManaCosts;
@@ -28,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class ElectricWandItem extends Item {
+public class ElectricWandItem extends WandItem {
     private static final float ATTACK_DAMAGE_BONUS = 4.0f; // total atk damage: 8
     private static final float ATTACK_SPEED = -3f;
     private static final double ABILITY_RANGE = 12.0;
@@ -36,13 +30,12 @@ public class ElectricWandItem extends Item {
     private static final Map<UUID, Integer> hitCounters = new HashMap<>();
 
     public ElectricWandItem(Properties settings) {
-        super(ToolMaterial.DIAMOND.applyToolProperties(
-                settings,
-                BlockTags.SWORD_EFFICIENT,
-                ATTACK_DAMAGE_BONUS,
-                ATTACK_SPEED,
-                0.0f
-        ));
+        super(settings, ATTACK_DAMAGE_BONUS, ATTACK_SPEED);
+    }
+
+    @Override
+    public int castCost(Player player) {
+        return ManaCosts.ELECTRIC_WAND;
     }
 
     public static void strikeLightningOn(Entity target, ServerLevel world, Player attacker) {
@@ -54,26 +47,20 @@ public class ElectricWandItem extends Item {
     }
 
     @Override
-    public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (attacker instanceof Player player && !attacker.level().isClientSide()) {
-            UUID uuid = player.getUUID();
-            int hits = hitCounters.getOrDefault(uuid, 0) + 1;
-            if (hits >= 3) {
-                hitCounters.put(uuid, 0);
-                strikeLightningOn(target, (ServerLevel) attacker.level(), player);
-            } else {
-                hitCounters.put(uuid, hits);
-            }
+    protected void onWandHit(ServerLevel level, Player player, LivingEntity target) {
+        UUID uuid = player.getUUID();
+        int hits = hitCounters.getOrDefault(uuid, 0) + 1;
+        if (hits >= 3) {
+            hitCounters.put(uuid, 0);
+            strikeLightningOn(target, level, player);
+        } else {
+            hitCounters.put(uuid, hits);
         }
-        super.postHurtEnemy(stack, target, attacker);
     }
 
     @Override
     public InteractionResult use(Level world, Player player, InteractionHand hand) {
-        if (!ManaManager.hasEnough(player, ManaCosts.ELECTRIC_WAND)) {
-            ManaManager.playInsufficientManaSound(player);
-            return InteractionResult.FAIL;
-        }
+        if (!canAfford(player, ManaCosts.ELECTRIC_WAND)) return InteractionResult.FAIL;
         if (!world.isClientSide()) {
             ServerLevel ServerLevel = (ServerLevel) world;
             if (!ManaManager.tryConsume(player, ManaCosts.ELECTRIC_WAND)) return InteractionResult.FAIL;

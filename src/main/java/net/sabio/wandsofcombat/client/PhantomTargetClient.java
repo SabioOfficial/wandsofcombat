@@ -7,6 +7,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.sabio.wandsofcombat.item.PhantomWandItem;
+import net.sabio.wandsofcombat.item.WandItem;
 import net.sabio.wandsofcombat.util.PhantomTargeting;
 
 public final class PhantomTargetClient {
@@ -52,7 +53,7 @@ public final class PhantomTargetClient {
         boolean using = player.isUsingItem() && player.getUseItem().getItem() instanceof PhantomWandItem;
         if (!using) armed = true;
 
-        double range = !using && player.isCrouching() ? PhantomTargeting.ULTIMATE_RANGE : PhantomTargeting.RANGE;
+        double range = !using && WandItem.isUltimateInput(player) ? PhantomTargeting.ULTIMATE_RANGE : PhantomTargeting.RANGE;
         LivingEntity looked = PhantomTargeting.findLookedAt(player, range);
         if (looked != null && (PhantomTargeting.isInvalidType(looked) || !player.hasLineOfSight(looked))) looked = null;
 
