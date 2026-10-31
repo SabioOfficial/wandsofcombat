@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " PH",
+    " SP",
+    "S  "
+  ],
+  "key": {
+    "H": "minecraft:heart_of_the_sea",
+    "P": "minecraft:prismarine_crystals",
+    "S": "wandsofcombat:magical_stick"
+  },
+  "result": {
+    "id": "wandsofcombat:aquatic_wand",
+    "count": 1
+  }
+}

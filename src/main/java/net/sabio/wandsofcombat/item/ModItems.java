@@ -58,6 +58,13 @@ public class ModItems {
 
     public static final MagmaWandItem MAGMA_WAND = registerWand(MAGMA_WAND_KEY, WandTooltip.Wand.MAGMA, MagmaWandItem::new);
 
+    public static final ResourceKey<Item> AQUATIC_WAND_KEY = ResourceKey.create(
+            Registries.ITEM,
+            Identifier.fromNamespaceAndPath(Wandsofcombat.MOD_ID, "aquatic_wand")
+    );
+
+    public static final AquaticWandItem AQUATIC_WAND = registerWand(AQUATIC_WAND_KEY, WandTooltip.Wand.AQUATIC, AquaticWandItem::new);
+
     public static final ResourceKey<Item> MAGICAL_STICK_KEY = ResourceKey.create(
             Registries.ITEM,
             Identifier.fromNamespaceAndPath(Wandsofcombat.MOD_ID, "magical_stick")
@@ -96,6 +103,7 @@ public class ModItems {
                         entries.accept(ELECTRIC_WAND);
                         entries.accept(PHANTOM_WAND);
                         entries.accept(MAGMA_WAND);
+                        entries.accept(AQUATIC_WAND);
                     })
                     .build()
     );

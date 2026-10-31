@@ -1,0 +1,21 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_heart_of_the_sea": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {"items":  "minecraft:heart_of_the_sea"}
+        ]
+      }
+    }
+  },
+  "requirements": [
+    ["has_heart_of_the_sea"]
+  ],
+  "rewards": {
+    "recipes": [
+      "wandsofcombat:aquatic_wand"
+    ]
+  }
+}

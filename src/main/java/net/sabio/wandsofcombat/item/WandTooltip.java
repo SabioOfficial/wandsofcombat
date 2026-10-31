@@ -24,7 +24,8 @@ public record WandTooltip(Wand wand) implements TooltipProvider {
         ICE("ice"),
         ELECTRIC("electric"),
         PHANTOM("phantom"),
-        MAGMA("magma");
+        MAGMA("magma"),
+        AQUATIC("aquatic");
 
         public static final Codec<Wand> CODEC = StringRepresentable.fromEnum(Wand::values);
         private final String id;
@@ -56,6 +57,7 @@ public record WandTooltip(Wand wand) implements TooltipProvider {
             case ELECTRIC -> ElectricWandItem.addTooltip(tooltip);
             case PHANTOM -> PhantomWandItem.addTooltip(tooltip);
             case MAGMA -> MagmaWandItem.addTooltip(tooltip);
+            case AQUATIC -> AquaticWandItem.addTooltip(tooltip);
         }
     }
 }
