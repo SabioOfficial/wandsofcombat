@@ -10,16 +10,18 @@ import net.sabio.wandsofcombat.network.AquaSyncPacket;
 public final class AquaClientState {
     private static int aquaHp = AquaHearts.MAX_AQUA_HP;
     private static boolean unlocked = false;
+    private static boolean returning = false;
 
     private AquaClientState() {}
 
     public static void initialize() {
-        ClientPlayNetworking.registerGlobalReceiver(AquaSyncPacket.TYPE, (payload, context) -> context.client().execute(() -> update(payload.aquaHp(), payload.unlocked())));
+        ClientPlayNetworking.registerGlobalReceiver(AquaSyncPacket.TYPE, (payload, context) -> context.client().execute(() -> update(payload.aquaHp(), payload.unlocked(), payload.returning())));
     }
 
-    public static void update(int newAquaHp, boolean newUnlocked) {
+    public static void update(int newAquaHp, boolean newUnlocked, boolean newReturning) {
         aquaHp = newAquaHp;
         unlocked = newUnlocked;
+        returning = newReturning;
     }
 
     public static int getAquaHp() {
@@ -28,5 +30,9 @@ public final class AquaClientState {
 
     public static boolean isUnlocked() {
         return unlocked;
+    }
+
+    public static boolean isReturning() {
+        return returning;
     }
 }

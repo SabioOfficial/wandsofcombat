@@ -30,6 +30,7 @@ public final class AquaHearts {
     public static final int MAX_AQUA_HP = 6;
     private static final double NORMAL_HP = 10.0;
     private static final int REGEN_INTERVAL_TICKS = 600;
+    private static final int BLINK_WINDOW_TICKS = 200;
     private static final float UNLOCK_HEALTH = 8.0f;
     private static final int UNLOCK_WINDOW_TICKS = 200;
 
@@ -139,10 +140,11 @@ public final class AquaHearts {
 
     private static void syncIfChanged(ServerPlayer player) {
         boolean unlocked = canUseAbilities(player);
-        int state = getAquaHp(player) * 2 + (unlocked ? 1 : 0);
+        boolean returning = getAquaHp(player) < MAX_AQUA_HP && regenProgress.getOrDefault(player.getUUID(), 0) >= REGEN_INTERVAL_TICKS - BLINK_WINDOW_TICKS;
+        int state = getAquaHp(player) * 4 + (returning ? 2 : 0) + (unlocked ? 1 : 0);
         Integer last = lastSynced.put(player.getUUID(), state);
         if (last == null || last != state) {
-            ServerPlayNetworking.send(player, new AquaSyncPacket(getAquaHp(player), unlocked));
+            ServerPlayNetworking.send(player, new AquaSyncPacket(getAquaHp(player), unlocked, returning));
         }
     }
 

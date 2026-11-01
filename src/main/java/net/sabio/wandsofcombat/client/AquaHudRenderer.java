@@ -21,6 +21,7 @@ public final class AquaHudRenderer {
     private static final int ICON_SIZE = 9;
     private static final int ICON_SPACING = 8;
     private static final int PULSE_INTERVAL_TICKS = 5;
+    private static final int BLINK_INTERVAL_TICKS = 10;
     public static final int AQUA_SLOTS = AquaHearts.MAX_AQUA_HP / 2;
     private static final int NO_Y = Integer.MIN_VALUE;
     public static final int[] SLOT_Y = {NO_Y, NO_Y, NO_Y};
@@ -71,6 +72,9 @@ public final class AquaHudRenderer {
                 case 1 -> charged ? TEX_HALF_CHARGED : TEX_HALF;
                 default -> charged ? TEX_EMPTY_CHARGED : TEX_EMPTY;
             };
+            if (AquaClientState.isReturning() && i == aquaSlots()) {
+                texture = (player.tickCount / BLINK_INTERVAL_TICKS) % 2 == 0 ? TEX_FULL : TEX_EMPTY;
+            }
             int slotY = SLOT_Y[i] != NO_Y ? SLOT_Y[i] : y;
             SLOT_Y[i] = NO_Y;
             graphics.blit(RenderPipelines.GUI_TEXTURED, texture, left + i * ICON_SPACING, slotY, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
