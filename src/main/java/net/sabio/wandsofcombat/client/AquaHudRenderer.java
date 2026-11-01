@@ -35,7 +35,7 @@ public final class AquaHudRenderer {
     private AquaHudRenderer() {}
 
     public static int aquaSlots() {
-        return (AquaClientState.getAquaHp() + 1) / 2;
+        return AquaClientState.getAquaHp() / 2;
     }
 
     private static Identifier tex(String name) {
@@ -64,7 +64,7 @@ public final class AquaHudRenderer {
         int left = client.getWindow().getGuiScaledWidth() / 2 - 91;
         int y = client.getWindow().getGuiScaledHeight() - 39;
 
-        for (int i = 0; i < aquaSlots(); i++) {
+        for (int i = 0; i < AQUA_SLOTS; i++) {
             int fill = Math.clamp(shown - i * 2, 0, 2);
             Identifier texture = switch (fill) {
                 case 2 -> charged ? TEX_FULL_CHARGED : TEX_FULL;

@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
@@ -37,5 +38,21 @@ public abstract class HeartRenderMixin {
             AquaHudRenderer.SLOT_Y[slot] = yo;
             ci.cancel();
         }
+    }
+
+    @ModifyVariable(
+            method = "extractHeart(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Hud$HeartType;IIZZZ)V",
+            at = @At("HEAD"),
+            argsOnly = true,
+            name = "xo")
+    private int wandsofcombat$shiftPastLostAquaHearts(int xo) {
+        Minecraft client = Minecraft.getInstance();
+        Player player = client.player;
+        if (player == null || !AquaHearts.isHoldingWand(player)) return xo;
+
+        int left = client.getWindow().getGuiScaledWidth() / 2 - 91;
+        int present = AquaHudRenderer.aquaSlots();
+        int slot = (xo - left) / 8;
+        return slot >= present ? xo + (AquaHudRenderer.AQUA_SLOTS - present) * 8 : xo;
     }
 }
