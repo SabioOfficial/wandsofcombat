@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.sabio.wandsofcombat.Wandsofcombat;
 import net.sabio.wandsofcombat.item.AquaticWandItem;
+import net.sabio.wandsofcombat.network.AquaSyncPacket;
 import net.sabio.wandsofcombat.util.TargetFilter;
 
 import java.util.HashMap;
@@ -34,6 +36,7 @@ public final class AquaHearts {
     private static final Map<UUID, Integer> aquaHp = new HashMap<>();
     private static final Map<UUID, Integer> regenProgress = new HashMap<>();
     private static final Map<UUID, Long> lastEnemyHit = new HashMap<>();
+    private static final Map<UUID, Integer> lastSynced = new HashMap<>();
 
     private AquaHearts() {}
 
@@ -44,6 +47,7 @@ public final class AquaHearts {
             UUID uuid = listener.player.getUUID();
             aquaHp.put(uuid, AquaState.get(server).getPoints(uuid));
             regenProgress.put(uuid, 0);
+            lastSynced.remove(uuid);
         });
         ServerPlayerEvents.AFTER_RESPAWN.register((_, newPlayer, alive) -> {
             if (alive) return;
@@ -51,6 +55,7 @@ public final class AquaHearts {
             aquaHp.put(uuid, MAX_AQUA_HP);
             regenProgress.put(uuid, 0);
             lastEnemyHit.remove(uuid);
+            lastSynced.remove(uuid);
         });
         ServerPlayConnectionEvents.DISCONNECT.register((listener, server) -> {
             UUID uuid = listener.player.getUUID();
@@ -58,6 +63,7 @@ public final class AquaHearts {
             aquaHp.remove(uuid);
             regenProgress.remove(uuid);
             lastEnemyHit.remove(uuid);
+            lastSynced.remove(uuid);
         });
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             AquaState state = AquaState.get(server);
@@ -108,15 +114,16 @@ public final class AquaHearts {
             boolean holding = isHoldingWand(player);
 
             int aqua = Math.min(getAquaHp(player), Mth.ceil(player.getHealth()));
-            boolean returned = false;
-            if (aqua < MAX_AQUA_HP) {
-                int progress = regenProgress.getOrDefault(uuid, 0) + 1;
-                if (progress >= REGEN_INTERVAL_TICKS) {
-                    aqua = Math.min(MAX_AQUA_HP, aqua + 2);
-                    progress = 0;
-                    returned = true;
+            boolean returned = false;if (aqua < MAX_AQUA_HP) {
+                if (holding) {
+                    int progress = regenProgress.getOrDefault(uuid, 0) + 1;
+                    if (progress >= REGEN_INTERVAL_TICKS) {
+                        aqua = Math.min(MAX_AQUA_HP, aqua + 2);
+                        progress = 0;
+                        returned = true;
+                    }
+                    regenProgress.put(uuid, progress);
                 }
-                regenProgress.put(uuid, progress);
             } else {
                 regenProgress.put(uuid, 0);
             }
@@ -126,6 +133,16 @@ public final class AquaHearts {
             if (returned && holding) {
                 player.setHealth(Math.min(player.getHealth() + 2, player.getMaxHealth()));
             }
+            syncIfChanged(player);
+        }
+    }
+
+    private static void syncIfChanged(ServerPlayer player) {
+        boolean unlocked = canUseAbilities(player);
+        int state = getAquaHp(player) * 2 + (unlocked ? 1 : 0);
+        Integer last = lastSynced.put(player.getUUID(), state);
+        if (last == null || last != state) {
+            ServerPlayNetworking.send(player, new AquaSyncPacket(getAquaHp(player), unlocked));
         }
     }
 

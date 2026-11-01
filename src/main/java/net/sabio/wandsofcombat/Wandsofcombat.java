@@ -7,6 +7,7 @@ import net.sabio.wandsofcombat.effect.ModEffects;
 import net.sabio.wandsofcombat.entity.ModEntities;
 import net.sabio.wandsofcombat.item.*;
 import net.sabio.wandsofcombat.mana.ManaManager;
+import net.sabio.wandsofcombat.network.AquaSyncPacket;
 import net.sabio.wandsofcombat.network.ManaSyncPacket;
 import net.sabio.wandsofcombat.potion.ModBrewingRecipes;
 import net.sabio.wandsofcombat.potion.ModPotions;
@@ -34,6 +35,7 @@ public class Wandsofcombat implements ModInitializer {
         MagmaWandHandler.initialize();
         IceWandComboHandler.initialize();
         ManaSyncPacket.initialize();
+        AquaSyncPacket.initialize();
         ManaManager.initialize();
         AquaHearts.initialize();
         ModEffects.initialize();

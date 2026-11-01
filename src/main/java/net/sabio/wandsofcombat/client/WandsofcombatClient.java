@@ -19,6 +19,8 @@ public class WandsofcombatClient implements ClientModInitializer {
     public void onInitializeClient() {
         MagnetTogglePacket.initializeClient();
         ManaHudRenderer.initialize();
+        AquaClientState.initialize();
+        AquaHudRenderer.initialize();
         PhantomTargetClient.initialize();
         KeyMapping.Category wandsCategory;
         try {
