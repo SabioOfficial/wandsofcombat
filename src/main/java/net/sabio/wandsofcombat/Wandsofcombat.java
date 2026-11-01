@@ -38,6 +38,7 @@ public class Wandsofcombat implements ModInitializer {
         AquaSyncPacket.initialize();
         ManaManager.initialize();
         AquaHearts.initialize();
+        AquaticWandComboHandler.initialize();
         ModEffects.initialize();
         ModPotions.initialize();
         ModBrewingRecipes.initialize();

@@ -46,7 +46,7 @@ public final class AquaHearts {
         ServerLivingEntityEvents.AFTER_DAMAGE.register(AquaHearts::onDamaged);
         ServerPlayConnectionEvents.JOIN.register((listener, _, server) -> {
             UUID uuid = listener.player.getUUID();
-            aquaHp.put(uuid, AquaState.get(server).getPoints(uuid));
+            aquaHp.put(uuid, Math.max(2, AquaState.get(server).getPoints(uuid) & ~1));
             regenProgress.put(uuid, 0);
             lastSynced.remove(uuid);
         });
@@ -84,6 +84,18 @@ public final class AquaHearts {
         return (getAquaHp(player) + 1) / 2;
     }
 
+    public static int getComboTier(Player player) {
+        return player.getHealth() > UNLOCK_HEALTH ? 3 : Math.clamp(getTier(player), 1, 3);
+    }
+
+    public static boolean healNormalHearts(ServerPlayer player, float amount) {
+        aquaHp.put(player.getUUID(), clampAqua(getAquaHp(player), player.getHealth()));
+        float before = player.getHealth();
+        if (before < getAquaHp(player)) return false;
+        player.setHealth(Math.min(before + amount, player.getMaxHealth()));
+        return player.getHealth() > before;
+    }
+
     public static boolean canUseAbilities(Player player) {
         if (!isHoldingWand(player) || getTier(player) < 1) return false;
         if (player.getHealth() > UNLOCK_HEALTH) return false;
@@ -100,9 +112,13 @@ public final class AquaHearts {
         if (holding) player.setHealth(Math.min(player.getHealth() + (after - before), player.getMaxHealth()));
     }
 
+    private static int clampAqua(int aqua, float health) {
+        return Math.clamp(((int) health) & ~1, 2, aqua);
+    }
+
     private static void onDamaged(LivingEntity entity, DamageSource source, float baseDamageTaken, float damageTaken, boolean blocked) {
         if (!(entity instanceof ServerPlayer player) || damageTaken <= 0) return;
-        aquaHp.put(player.getUUID(), Math.min(getAquaHp(player), Mth.ceil(player.getHealth())));
+        aquaHp.put(player.getUUID(), clampAqua(getAquaHp(player), player.getHealth()));
         if (source.getEntity() instanceof LivingEntity attacker && attacker != player && TargetFilter.isHostileOrPlayer(attacker) && !attacker.isAlliedTo(player)) {
             lastEnemyHit.put(player.getUUID(), player.level().getGameTime());
         }
@@ -114,8 +130,9 @@ public final class AquaHearts {
             UUID uuid = player.getUUID();
             boolean holding = isHoldingWand(player);
 
-            int aqua = Math.min(getAquaHp(player), Mth.ceil(player.getHealth()));
-            boolean returned = false;if (aqua < MAX_AQUA_HP) {
+            int aqua = clampAqua(getAquaHp(player), player.getHealth());
+            boolean returned = false;
+            if (aqua < MAX_AQUA_HP) {
                 if (holding) {
                     int progress = regenProgress.getOrDefault(uuid, 0) + 1;
                     if (progress >= REGEN_INTERVAL_TICKS) {
