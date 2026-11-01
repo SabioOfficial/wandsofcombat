@@ -19,6 +19,7 @@ public final class AquaClientState {
     }
 
     public static void update(int newAquaHp, boolean newUnlocked, boolean newReturning) {
+        AquaHearts.setClientView(newAquaHp, newUnlocked);
         aquaHp = newAquaHp;
         unlocked = newUnlocked;
         returning = newReturning;

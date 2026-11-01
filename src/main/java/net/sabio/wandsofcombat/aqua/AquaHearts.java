@@ -39,7 +39,23 @@ public final class AquaHearts {
     private static final Map<UUID, Long> lastEnemyHit = new HashMap<>();
     private static final Map<UUID, Integer> lastSynced = new HashMap<>();
 
+    private static volatile int clientAquaHp = MAX_AQUA_HP;
+    private static volatile boolean clientUnlocked = false;
+
     private AquaHearts() {}
+
+    public static void setClientView(int aquaHp, boolean unlocked) {
+        clientAquaHp = aquaHp;
+        clientUnlocked = unlocked;
+    }
+
+    public static int getClientTier() {
+        return (clientAquaHp + 1) / 2;
+    }
+
+    public static boolean isClientUnlocked() {
+        return clientUnlocked;
+    }
 
     public static void initialize() {
         ServerTickEvents.END_SERVER_TICK.register(AquaHearts::onTick);
